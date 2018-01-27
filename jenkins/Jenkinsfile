@@ -1,9 +1,8 @@
 pipeline {
-  ws("/var/jenkins_workspaces/hello_world") {
   agent {
-    docker { 
-      image 'node:6-alpine'
-      args '-u 0:0'
+    docker.image('node:6-alpine').inside () {
+      print "inside a node server"
+      sh("echo test");
     }
   }
   stages {
@@ -28,5 +27,4 @@ pipeline {
       }
     }
   }
-}
 }
