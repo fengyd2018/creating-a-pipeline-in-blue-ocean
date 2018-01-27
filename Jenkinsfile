@@ -1,31 +1,14 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:6-alpine'
-      args '-p 3000:3000'
-    }
-    
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh 'echo "Test"'
-      }
-    }
-    stage('Test') {
-      environment {
-        CI = 'true'
-      }
-      steps {
-        sh './jenkins/scripts/test.sh'
-      }
-    }
-    stage('Deliver') {
-      steps {
-        sh './jenkins/scripts/deliver.sh'
-        input 'Finished using the web site? (Click "Proceed" to continue)'
-        sh './jenkins/scripts/kill.sh'
-      }
-    }
-  }
+  podTemplate(label: 'ubuntu-k8s', containers: [
+    containerTemplate(name: 'ubuntu', image: 'ubuntu:16.04', ttyEnabled: true, 
+        command: 'cat')    
+  ]) {
+    node('ubuntu-k8s') {
+        container('ubuntu') {
+            stage('Run Command') {
+                sh 'cat /etc/issue'
+            }
+         }
+     }
+   }
 }
