@@ -1,7 +1,9 @@
 pipeline {
   ws("/var/jenkins_workspaces/helloworld"){
   agent {
-     docker.image("node:6-alpine").inside("-u 0:0")
+    docker { 
+      image 'node:6-alpine'
+      args '-p 3000:3000 -u 0:0'
   }
   stages {
     stage('Build') {
