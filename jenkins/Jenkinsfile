@@ -1,4 +1,5 @@
 pipeline {
+  ws("/var/jenkins_workspaces/hello_world")
   agent {
     docker { 
       image 'node:6-alpine'
@@ -27,4 +28,5 @@ pipeline {
       }
     }
   }
+}
 }
