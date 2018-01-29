@@ -1,14 +1,10 @@
 pipeline {
   agent {
-    kubernetes {
-      label 'blue-ocean'
-      containerTemplate {
-        name 'node6'
-        image 'node:6-alpine'
-        ttyEnabled true
-        command 'cat'
-      }
+    docker {
+      image 'node:6-alpine'
+      args '-p 3000:3000'
     }
+    
   }
   stages {
     stage('Build') {
@@ -31,5 +27,8 @@ pipeline {
         sh './jenkins/scripts/kill.sh'
       }
     }
+  }
+  environment {
+    cloud = 'kubenetes'
   }
 }
