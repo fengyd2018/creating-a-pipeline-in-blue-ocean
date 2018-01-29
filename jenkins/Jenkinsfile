@@ -1,8 +1,13 @@
 pipeline {
   agent {
-    docker.image('node:6-alpine').inside () {
-      print "inside a node server"
-      sh("echo test");
+    kubernetes {
+      label 'blue-ocean'
+      containerTemplate {
+        name 'node6'
+        image 'node:6-alpine'
+        ttyEnabled true
+        command 'cat'
+      }
     }
   }
   stages {
