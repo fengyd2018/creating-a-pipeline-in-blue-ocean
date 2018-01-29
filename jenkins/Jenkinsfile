@@ -1,10 +1,10 @@
 pipeline {
   agent {
-    kubernetes {
+    kubernetes {
       label 'blue-ocean'
       containerTemplate {
         name 'node6'
-        image 'node:6-alpine'
+        image 'node:6-alpine'
         ttyEnabled true
         command 'cat'
       }
