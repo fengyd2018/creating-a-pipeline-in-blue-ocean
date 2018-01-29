@@ -1,14 +1,35 @@
 pipeline {
-  podTemplate(label: 'ubuntu-k8s', containers: [
-    containerTemplate(name: 'ubuntu', image: 'ubuntu:16.04', ttyEnabled: true, 
-        command: 'cat')    
-  ]) {
-    node('ubuntu-k8s') {
-        container('ubuntu') {
-            stage('Run Command') {
-                sh 'cat /etc/issue'
-            }
-         }
-     }
-   }
+  agent {
+    kubernetes {
+      label 'blue-ocean'
+      containerTemplate {
+        name 'node6'
+        image 'node:6-alpine'
+        ttyEnabled true
+        command 'cat'
+      }
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'npm install'
+      }
+    }
+    stage('Test') {
+      environment {
+        CI = 'true'
+      }
+      steps {
+        sh './jenkins/scripts/test.sh'
+      }
+    }
+    stage('Deliver') {
+      steps {
+        sh './jenkins/scripts/deliver.sh'
+        input 'Finished using the web site? (Click "Proceed" to continue)'
+        sh './jenkins/scripts/kill.sh'
+      }
+    }
+  }
 }
